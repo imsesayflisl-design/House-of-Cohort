@@ -10,8 +10,19 @@ if (!RESEND_API_KEY || RESEND_API_KEY.includes('placeholder')) {
   console.warn('⚠️  RESEND_API_KEY is missing or is a placeholder. Email functionality will be limited.');
 }
 
-// Initialize Resend client
-const resend = new Resend(RESEND_API_KEY);
+// Lazily initialize the Resend client. Creating it eagerly at module load
+// throws when RESEND_API_KEY is absent, which crashes `next build` while it
+// collects route metadata. Defer construction until an email is actually sent.
+let resendClient: Resend | null = null;
+function getResend(): Resend {
+  if (!RESEND_API_KEY || RESEND_API_KEY.includes('placeholder')) {
+    throw new Error('RESEND_API_KEY is not configured');
+  }
+  if (!resendClient) {
+    resendClient = new Resend(RESEND_API_KEY);
+  }
+  return resendClient;
+}
 
 // Email configuration
 const EMAIL_CONFIG = {
@@ -42,7 +53,7 @@ export interface SendReceiptEmailOptions {
 // Base email sending function
 export async function sendEmail(options: EmailOptions) {
   try {
-    const result = await resend.emails.send({
+    const result = await getResend().emails.send({
       from: `${EMAIL_CONFIG.companyName} <${EMAIL_CONFIG.from}>`,
       to: options.to,
       replyTo: EMAIL_CONFIG.replyTo,
