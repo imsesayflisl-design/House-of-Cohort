@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npx prisma generate)",
+      "PowerShell(netstat *)",
+      "WebFetch(domain:docs.monime.io)"
+    ]
+  }
+}
