@@ -43,7 +43,9 @@ class InMemoryEmailQueue implements JobQueue {
   private async processNextJob(): Promise<void> {
     if (this.jobs.size === 0) return;
 
-    const [jobId, job] = this.jobs.entries().next().value;
+    const entry = this.jobs.entries().next().value;
+    if (!entry) return;
+    const [jobId, job] = entry;
     this.jobs.delete(jobId);
 
     try {

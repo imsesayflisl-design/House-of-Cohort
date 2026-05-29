@@ -43,6 +43,15 @@ export function getCompanyInfo() {
   };
 }
 
+// Shape of a single line item on a formatted receipt
+export interface ReceiptLineItem {
+  name: string;
+  size: string;
+  quantity: number;
+  unitPrice: string;
+  totalPrice: string;
+}
+
 // Extract order data for receipts
 export function formatOrderForReceipt(order: any) {
   const company = getCompanyInfo();
@@ -78,13 +87,13 @@ export function formatOrderForReceipt(order: any) {
     },
 
     // Order items
-    items: order.items?.map((item: any) => ({
+    items: ((order.items ?? []) as any[]).map((item: any): ReceiptLineItem => ({
       name: item.product?.name || "Unknown Product",
       size: item.variant?.size || "N/A",
       quantity: item.quantity,
       unitPrice: formatCurrency(item.price),
       totalPrice: formatCurrency(item.price * item.quantity),
-    })) || [],
+    })),
 
     // Pricing breakdown
     pricing: {

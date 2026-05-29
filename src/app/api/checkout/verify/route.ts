@@ -8,9 +8,10 @@ import { confirmReservation, releaseReservation } from "@/lib/stock-reservation"
 import { queueOrderConfirmationEmail } from "@/lib/jobs/email-queue";
 
 export async function GET(req: NextRequest) {
+  let orderId: string | null = null;
   try {
     const { searchParams } = new URL(req.url);
-    const orderId = searchParams.get("orderId");
+    orderId = searchParams.get("orderId");
     const sessionId = searchParams.get("sid");
 
     if (!orderId || !sessionId) {
@@ -74,7 +75,7 @@ export async function GET(req: NextRequest) {
     await prisma.$transaction(async (tx) => {
       // Update order status
       await tx.order.update({
-        where: { id: orderId },
+        where: { id: orderId! },
         data: {
           status: "PAID",
           monimeReference: sessionId,

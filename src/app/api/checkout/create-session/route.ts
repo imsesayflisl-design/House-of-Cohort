@@ -7,7 +7,7 @@ import { z } from "zod";
 // Request body schema
 const createSessionSchema = z.object({
   orderId: z.string(),
-  metadata: z.record(z.string()).optional(),
+  metadata: z.record(z.string(), z.string()).optional(),
   callbackState: z.string().optional(),
 });
 
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     if (!result.success) {
       return NextResponse.json(
-        { error: "Invalid request data", details: result.error.errors },
+        { error: "Invalid request data", details: result.error.issues },
         { status: 400 }
       );
     }

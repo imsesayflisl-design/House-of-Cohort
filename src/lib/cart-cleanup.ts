@@ -29,8 +29,8 @@ export async function clearGuestCart(guestSessionId?: string | null) {
  * Clear cart cookie.
  * Call this from the checkout success page for guest orders.
  */
-export function clearCartCookie() {
-  const cookieStore = cookies();
+export async function clearCartCookie() {
+  const cookieStore = await cookies();
   cookieStore.set(CART_SESSION_COOKIE, "", {
     expires: new Date(0),
     httpOnly: true,

@@ -160,8 +160,13 @@ export async function getAvailableStock(variantId: string): Promise<StockAvailab
 /**
  * Internal helper for getting available stock (can use custom transaction)
  */
+type DbClient = Omit<
+  typeof prisma,
+  "$connect" | "$disconnect" | "$on" | "$use" | "$transaction" | "$extends"
+>;
+
 async function getAvailableStockInternal(
-  client: typeof prisma,
+  client: DbClient,
   variantId: string
 ): Promise<StockAvailability> {
   // Get variant with current reservations

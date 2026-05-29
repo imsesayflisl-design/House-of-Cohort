@@ -66,8 +66,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       // Subsequent requests - check if user is still active (but only occasionally)
-      if (token.id && !token.lastCheck ||
-          (token.lastCheck && Date.now() - token.lastCheck > 60 * 60 * 1000)) { // Check every hour
+      const lastCheck = token.lastCheck as number | undefined;
+      const needsActiveCheck = !lastCheck || Date.now() - lastCheck > 60 * 60 * 1000; // Check every hour
+      if (token.id && needsActiveCheck) {
         try {
           const currentUser = await prisma.user.findUnique({
             where: { id: token.id as string },
