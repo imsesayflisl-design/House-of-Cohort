@@ -31,6 +31,9 @@ export const metadata: Metadata = {
   title: "House of Cohort — Luxury Fragrance, Freetown",
   description:
     "Hand-blended fragrances inspired by Sierra Leone's heritage — an archive of scent for the discerning.",
+  verification: {
+    google: "FAfA3TD3QnAVC86NZv0CflrHYxTNdq6VD6OUlOvblvc",
+  },
 };
 
 export default function RootLayout({
